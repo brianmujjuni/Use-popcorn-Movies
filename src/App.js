@@ -67,12 +67,17 @@ async function fetcMovies(){
 
  if(!res.ok) throw new Error('Something went wrong')
 
+ 
  const data = await res.json()
+ if(data.Response === 'False') throw new Error('Movie not found')
+ 
  setMovies(data.Search)
- setIsLoading(false)
+ 
   }catch(err){
     console.log(err.message)
     setError(err.message)
+  }finally{
+    setIsLoading(false)
   }
 }
 fetcMovies()
