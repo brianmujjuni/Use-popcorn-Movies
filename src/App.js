@@ -56,15 +56,24 @@ export default function App() {
 const [movies, setMovies] = useState([]);
 const [watched, setWatched] = useState([]);
 const [isLoading,setIsLoading] = useState(false)
+const [error,setError] = useState('')
 const query = 'pirates'
 
 useEffect( ()=> {
 async function fetcMovies(){
+  try{
   setIsLoading(true)
  const res = await fetch(`http://www.omdbapi.com/?apikey=${Key}&s=${query}`)
+
+ if(!res.ok) throw new Error('Something went wrong')
+
  const data = await res.json()
  setMovies(data.Search)
  setIsLoading(false)
+  }catch(err){
+    console.log(err.message)
+    setError(err.message)
+  }
 }
 fetcMovies()
 }, [])
@@ -255,5 +264,11 @@ function NumResults({ movies }) {
 function Loader(){
   return(
     <p className="loader">Loading...</p>
+  )
+}
+
+function ErrorMessage({message}){
+  return(
+    <p className="error">{message}</p>
   )
 }
