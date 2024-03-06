@@ -55,11 +55,15 @@ const Key = 'f84fc31d'
 export default function App() {
 const [movies, setMovies] = useState([]);
 const [watched, setWatched] = useState([]);
+const query = 'pirates'
 
-useEffect(function(){
-  fetch(`http://www.omdbapi.com/?apikey=${Key}&s=rambo`)
-  .then(res => res.json())
-  .then(data => setMovies(data.Search))
+useEffect( ()=> {
+async function fetcMovies(){
+ const res = await fetch(`http://www.omdbapi.com/?apikey=${Key}&s=${query}`)
+ const data = await res.json()
+ setMovies(data.Search)
+}
+fetcMovies()
 }, [])
 
 
