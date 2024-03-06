@@ -55,13 +55,16 @@ const Key = 'f84fc31d'
 export default function App() {
 const [movies, setMovies] = useState([]);
 const [watched, setWatched] = useState([]);
+const [isLoading,setIsLoading] = useState(false)
 const query = 'pirates'
 
 useEffect( ()=> {
 async function fetcMovies(){
+  setIsLoading(true)
  const res = await fetch(`http://www.omdbapi.com/?apikey=${Key}&s=${query}`)
  const data = await res.json()
  setMovies(data.Search)
+ setIsLoading(false)
 }
 fetcMovies()
 }, [])
@@ -77,7 +80,7 @@ fetcMovies()
 
       <Main>
         <Box>
-          <MovieList movies={movies} />
+          {isLoading ? <Loader/> : < MovieList movies={movies}/>}
         </Box>
 
         <Box>
@@ -247,4 +250,10 @@ function NumResults({ movies }) {
       Found <strong>{movies.length}</strong> results
     </p>
   );
+}
+
+function Loader(){
+  return(
+    <p className="loader">Loading...</p>
+  )
 }
