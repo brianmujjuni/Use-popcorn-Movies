@@ -57,7 +57,8 @@ const [movies, setMovies] = useState([]);
 const [watched, setWatched] = useState([]);
 const [isLoading,setIsLoading] = useState(false)
 const [error,setError] = useState('')
-const query = 'pirates'
+const [query, setQuery] = useState("");
+const tempQuery = 'pirates'
 
 useEffect( ()=> {
 async function fetcMovies(){
@@ -70,7 +71,7 @@ async function fetcMovies(){
  
  const data = await res.json()
  if(data.Response === 'False') throw new Error('Movie not found')
- 
+
  setMovies(data.Search)
  
   }catch(err){
@@ -88,7 +89,7 @@ fetcMovies()
     <>
       <NavBar>
         <Logo />
-        <Search />
+        <Search query={query} setQuery={setQuery}/>
         <NumResults movies={movies} />
       </NavBar>
 
@@ -238,8 +239,8 @@ function NavBar({ children }) {
   return <nav className="nav-bar">{children}</nav>;
 }
 
-function Search() {
-  const [query, setQuery] = useState("");
+function Search({query,setQuery}) {
+
   return (
     <input
       className="search"
