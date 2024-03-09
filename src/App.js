@@ -64,6 +64,7 @@ useEffect( ()=> {
 async function fetcMovies(){
   try{
   setIsLoading(true)
+  setError('')
  const res = await fetch(`http://www.omdbapi.com/?apikey=${Key}&s=${query}`)
 
  if(!res.ok) throw new Error('Something went wrong')
@@ -75,14 +76,20 @@ async function fetcMovies(){
  setMovies(data.Search)
  
   }catch(err){
-    console.log(err.message)
+    
     setError(err.message)
   }finally{
     setIsLoading(false)
   }
 }
+if(query.length < 3){
+  setMovies([])
+  setError('')
+  return
+}
+
 fetcMovies()
-}, [])
+}, [query])
 
 
   return (
