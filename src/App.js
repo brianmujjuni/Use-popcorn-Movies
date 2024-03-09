@@ -50,68 +50,70 @@ const tempWatchedData = [
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
-const Key = 'f84fc31d'
+const Key = "f84fc31d";
 
 export default function App() {
-const [movies, setMovies] = useState([]);
-const [watched, setWatched] = useState([]);
-const [isLoading,setIsLoading] = useState(false)
-const [error,setError] = useState('')
-const [query, setQuery] = useState("");
-const tempQuery = 'pirates'
+  const [movies, setMovies] = useState([]);
+  const [watched, setWatched] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [query, setQuery] = useState("");
+  const [selectedId, setSelectedId] = useState(null);
 
-useEffect( ()=> {
-async function fetcMovies(){
-  try{
-  setIsLoading(true)
-  setError('')
- const res = await fetch(`http://www.omdbapi.com/?apikey=${Key}&s=${query}`)
+  useEffect(() => {
+    async function fetcMovies() {
+      try {
+        setIsLoading(true);
+        setError("");
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${Key}&s=${query}`
+        );
 
- if(!res.ok) throw new Error('Something went wrong')
+        if (!res.ok) throw new Error("Something went wrong");
 
- 
- const data = await res.json()
- if(data.Response === 'False') throw new Error('Movie not found')
+        const data = await res.json();
+        if (data.Response === "False") throw new Error("Movie not found");
 
- setMovies(data.Search)
- 
-  }catch(err){
-    
-    setError(err.message)
-  }finally{
-    setIsLoading(false)
-  }
-}
-if(query.length < 3){
-  setMovies([])
-  setError('')
-  return
-}
+        setMovies(data.Search);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    if (query.length < 3) {
+      setMovies([]);
+      setError("");
+      return;
+    }
 
-fetcMovies()
-}, [query])
-
+    fetcMovies();
+  }, [query]);
 
   return (
     <>
       <NavBar>
         <Logo />
-        <Search query={query} setQuery={setQuery}/>
+        <Search query={query} setQuery={setQuery} />
         <NumResults movies={movies} />
       </NavBar>
 
       <Main>
         <Box>
-          {isLoading && <Loader/>}
-          {!isLoading && !error && < MovieList movies={movies}/>}
-          {error && <ErrorMessage message={error}/>}
+          {isLoading && <Loader />}
+          {!isLoading && !error && <MovieList movies={movies} />}
+          {error && <ErrorMessage message={error} />}
         </Box>
 
         <Box>
-         
-            <WatchedSummary watched={watched} />
-            <WatchedMovieList watched={watched} />
-         
+          {selectedId ? (
+            <MovieDetails selectedId={selectedId} />
+          ) : (
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMovieList watched={watched} />
+            </>
+          )}
         </Box>
       </Main>
     </>
@@ -246,8 +248,7 @@ function NavBar({ children }) {
   return <nav className="nav-bar">{children}</nav>;
 }
 
-function Search({query,setQuery}) {
-
+function Search({ query, setQuery }) {
   return (
     <input
       className="search"
@@ -276,14 +277,14 @@ function NumResults({ movies }) {
   );
 }
 
-function Loader(){
-  return(
-    <p className="loader">Loading...</p>
-  )
+function Loader() {
+  return <p className="loader">Loading...</p>;
 }
 
-function ErrorMessage({message}){
-  return(
-    <p className="error">{message}</p>
-  )
+function ErrorMessage({ message }) {
+  return <p className="error">{message}</p>;
+}
+
+function MovieDetails({ selectedId }) {
+  return <div className="details">{selectedId}</div>;
 }
