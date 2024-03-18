@@ -76,14 +76,6 @@ export default function App() {
     setWatched(watched => watched.filter(movie => movie.imdbID !== id))
   }
 
- 
- 
- 
- 
- 
- 
- 
-
   useEffect(() => {
     const controller = new AbortController()
 
@@ -117,6 +109,7 @@ export default function App() {
       return;
     }
 
+    handleCloseMovie()
     fetcMovies();
 
     return function(){
